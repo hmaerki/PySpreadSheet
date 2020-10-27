@@ -37,9 +37,9 @@ Voltmeter: KEYSIGHT U1231A
   equipment.reference: Cell D5 in Table "SheetQuery" in Worksheet "Equipment" in File "zulu_excel_reader_test.xlsx""
 ```
 
-### Follow changed of the excel sheet in source control system
+### How to follow changes in a binary excel sheet?
 
-This file may be used in souce code revision control to track relevant changes in the excel file.
+The dump-file may be used to track relevant changes in the excel file. Specially in git it is important to follow the changes in the content of the excel sheet.
 
 `pyspreadsheet_dump.txt`
 ```text
