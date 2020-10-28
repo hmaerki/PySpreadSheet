@@ -72,7 +72,7 @@ class Row:
 
     def dump(self, file):
         columns = [str(self[c]) for c in self.__table.column_names]
-        print(f'    {"|".join(columns)}', file=file)
+        print(f'  {"|".join(columns)}', file=file)
 
 class Table:
     def __init__(self, excel, table_name, worksheet_name):
@@ -84,7 +84,7 @@ class Table:
 
     @property
     def reference(self):
-        return f'Table "{self.worksheet_name}" in Worksheet "{self.table_name}" in {self.__excel.reference}'
+        return f'Table "{self.table_name}" in Worksheet "{self.worksheet_name}" in {self.__excel.reference}'
 
     @property
     def column_names(self):
@@ -115,7 +115,7 @@ class Table:
     def dump(self, file):
         print(file=file)
         print(f'Table: {self.table_name}', file=file)
-        print(f'    {self.column_names_text}', file=file)
+        print(f'  {self.column_names_text}', file=file)
         print(file=file)
         for obj_row in self.rows:
             obj_row.dump(file=file)
@@ -187,4 +187,4 @@ class ExcelReader:
             return
 
         for table_name in self.table_names:
-            self[table_name].dump(f)
+            self[table_name].dump(file)
