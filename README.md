@@ -6,6 +6,7 @@ This is a python implementation of a subset of https://github.com/hmaerki/ZuluSp
 ## Example Excel Sheet
 
 `pyspreadsheet_test.xlsx`
+
 ![Kiku](images/tables.png)
 
 ## Example Code

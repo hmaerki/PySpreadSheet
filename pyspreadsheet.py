@@ -28,7 +28,10 @@ class Cell:
 
     @property
     def text(self):
-        return str(self.__cell.value)
+        value = self.__cell.value
+        if value is None:
+            return ''
+        return str(value)
 
     def __str__(self):
         return self.text
