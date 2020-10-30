@@ -17,17 +17,19 @@ COLUMN_NAME = 1 # Table name
 COLUMN_FIRST_CULUMN = 2
 
 class Cell:
-    def __init__(self, row, column, pyxl_cell):
+    def __init__(self, row, column, text):
         self._row = row
         self._column = column
-        self._pyxl_cell = pyxl_cell
+        self.text = text
 
     def __str__(self):
         return self.text
 
     @property
-    def text(self):
-        return Cell.get_cell_value(self._pyxl_cell)
+    def text_not_empty(self):
+        if self.text.strip() == '':
+            raise Exception(f'Cell must not be empty! {self.reference}')
+        return self.text
 
     @property
     def int(self):
@@ -53,8 +55,29 @@ class Cell:
             raise ValueError(f'"{t}" is not a valid {_enum.__name__}! Valid values are {valid_values}. See: {self.reference}')
 
     @property
+    def coordinate(self):
+        return self.get_coordinate(self._column._columnidx, self._row._rowidx)
+
+    @property
     def reference(self):
-        return f'Cell "{self._pyxl_cell.coordinate}" in {self._row._table.reference}'
+        return f'Cell "{self.coordinate}" in {self._row._table.reference}'
+
+    @classmethod
+    def get_coordinate(cls, columnidx, rowidx):
+        '''
+        >>> Cell.get_coordinate(0, 0)
+        'A1'
+        >>> Cell.get_coordinate(25, 1)
+        'Z2'
+        >>> Cell.get_coordinate(26, 2)
+        'AA3'
+        '''
+        s = ''
+        while columnidx >= 0:
+            c = columnidx % 26
+            s += chr(c + ord('A'))
+            columnidx -= 26
+        return s + str(rowidx+1)
 
     @classmethod
     def get_cell(cls, pyxl_row, columnidx):
@@ -81,7 +104,8 @@ class Row:
         self._cells = []
         for column in table.columns:
             cell = Cell.get_cell(pyxl_row, column._columnidx)
-            self._cells.append(Cell(self, column, cell))
+            text = Cell.get_cell_value(cell)
+            self._cells.append(Cell(self, column, text))
 
         for cell in self._cells:
             setattr(self, f'{self.PREFIX}{cell._column.name}', cell)
@@ -235,3 +259,7 @@ class ExcelReader:
 
         for table_name in self.table_names:
             self[table_name].dump(file)
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()

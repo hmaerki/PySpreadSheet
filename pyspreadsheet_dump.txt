@@ -2,7 +2,7 @@
 Table: Equipment
   ID|Instrument|Model|Serial
 
-  1|Voltmeter|Keysight 34460A|1245678
+  1|Voltmeter|Keysight 34460A|
   2|Multimeter|Fluke 787|2234
   3|Voltmeter|KEYSIGHT U1231A|134555
 

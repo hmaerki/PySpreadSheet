@@ -132,6 +132,20 @@ def doctest_cell_enumaration():
     ValueError: "1" is not a valid EquipmentType! Valid values are Voltmeter|Multimeter. See: Cell "C3" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
     '''
 
+def doctest_assert_not_empty():
+    '''
+    >>> cell_empty = excel.table_Equipment.rows[0].col_Serial
+    >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
+
+    >>> cell_empty.text_not_empty
+    Traceback (most recent call last):
+       ...
+    Exception: Cell must not be empty! Cell "F3" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
+    
+    >>> cell_voltmeter.text_not_empty
+    'Voltmeter'
+    '''
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
