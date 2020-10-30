@@ -1,10 +1,10 @@
 
 Table: Equipment
-  ID|Model|Serial|Type
+  ID|Instrument|Model|Serial
 
-  1|Keysight 34460A|1245678|Voltmeter
-  2|Fluke 787|2234|Multimeter
-  3|KEYSIGHT U1231A|134555|Voltmeter
+  1|Voltmeter|Keysight 34460A|1245678
+  2|Multimeter|Fluke 787|2234
+  3|Voltmeter|KEYSIGHT U1231A|134555
 
 Table: Measurement
   Date|Equipment|Operator
@@ -20,7 +20,7 @@ Table: TableA
   Spalte4Zeile5|A|Spalte6Zeile5|Spalte7Zeile5|1005
   Spalte4Zeile6|B|Spalte6Zeile6|Spalte7Zeile6|1006
   Splate4Zeile8|D|Spalte6Zeile8|Spalte7Zeile8|1008
-  Splate4Zeile9|None|None|Spalte7Zeile9|1009
+  Splate4Zeile9|||Spalte7Zeile9|1009
   Splate4Zeile10|aa|aa|Spalte7Zeile10|1010
 
 Table: TableC

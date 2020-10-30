@@ -13,13 +13,10 @@ This is a python implementation of a subset of https://github.com/hmaerki/ZuluSp
 
 ```python
 excel = ExcelReader('zulu_excel_reader_test.xlsx')
-table = excel['Equipment']
-for row in table.rows:
-    equipment = row['Type']
-    model = row['Model'] 
-    print(f' {equipment}: {model}')
-    print(f'   row.reference: {row.reference}')
-    print(f'   equipment.reference: {equipment.reference}')
+
+for row in excel.table_Equipment.rows:
+    print(f'{row.col_Instrument}: {row.col_Model}')
+    print(f'  reference: {row.col_Model.reference}')
 
 excel.dump('zulu_excel_reader_test_dump.txt')
 ```
@@ -28,14 +25,11 @@ excel.dump('zulu_excel_reader_test_dump.txt')
 
 ```text
 Voltmeter: Keysight 34460A
-  row.reference: Row 3 in Table "SheetQuery" in Worksheet "Equipment" in File "zulu_excel_reader_test.xlsx""
-  equipment.reference: Cell D3 in Table "SheetQuery" in Worksheet "Equipment" in File "zulu_excel_reader_test.xlsx""
+  reference: Cell "E3" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
 Multimeter: Fluke 787
-  row.reference: Row 4 in Table "SheetQuery" in Worksheet "Equipment" in File "zulu_excel_reader_test.xlsx""
-  equipment.reference: Cell D4 in Table "SheetQuery" in Worksheet "Equipment" in File "zulu_excel_reader_test.xlsx""
+  reference: Cell "E4" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
 Voltmeter: KEYSIGHT U1231A
-  row.reference: Row 5 in Table "SheetQuery" in Worksheet "Equipment" in File "zulu_excel_reader_test.xlsx""
-  equipment.reference: Cell D5 in Table "SheetQuery" in Worksheet "Equipment" in File "zulu_excel_reader_test.xlsx""
+  reference: Cell "E5" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
 ```
 
 ### How to follow changes in a binary excel sheet?
