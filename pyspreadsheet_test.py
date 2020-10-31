@@ -95,7 +95,6 @@ def doctest_row():
 def doctest_cell_int():
     '''
     >>> cell_id = excel.table_Equipment.rows[0].col_ID
-    >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
 
     >>> cell_id.reference
     'Cell "C3" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"'
@@ -109,6 +108,7 @@ def doctest_cell_int():
     >>> cell_id.astype(float)
     1.0
 
+    >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
     >>> cell_voltmeter.int
     Traceback (most recent call last):
        ...
@@ -117,7 +117,6 @@ def doctest_cell_int():
 
 def doctest_cell_enumaration():
     '''
-    >>> cell_id = excel.table_Equipment.rows[0].col_ID
     >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
 
     >>> cell_voltmeter.text
@@ -126,6 +125,7 @@ def doctest_cell_enumaration():
     >>> cell_voltmeter.asenum(EquipmentType)
     <EquipmentType.Voltmeter: 1>
 
+    >>> cell_id = excel.table_Equipment.rows[0].col_ID
     >>> cell_id.asenum(EquipmentType)
     Traceback (most recent call last):
        ...
@@ -135,15 +135,31 @@ def doctest_cell_enumaration():
 def doctest_assert_not_empty():
     '''
     >>> cell_empty = excel.table_Equipment.rows[0].col_Serial
-    >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
 
     >>> cell_empty.text_not_empty
     Traceback (most recent call last):
        ...
     Exception: Cell must not be empty! Cell "F3" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
     
+    >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
     >>> cell_voltmeter.text_not_empty
     'Voltmeter'
+    '''
+
+def doctest_date():
+    '''
+    >>> cell_date = excel.table_Measurement.rows[0].col_Date
+    >>> cell_date.text
+    '2017-06-20 00:00:00'
+    >>> cell_date.asdate()
+    '2017-06-20'
+    >>> cell_date.asdate(format='%A')
+    'Tuesday'
+    >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
+    >>> cell_voltmeter.asdate()
+    Traceback (most recent call last):
+       ...
+    ValueError: "Voltmeter" is not a datetime! See: Cell "D3" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
     '''
 
 if __name__ == '__main__':

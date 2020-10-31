@@ -12,13 +12,13 @@ This is a python implementation of a subset of https://github.com/hmaerki/ZuluSp
 ## Example Code
 
 ```python
-excel = ExcelReader('zulu_excel_reader_test.xlsx')
+excel = ExcelReader('pyspreadsheet_test.xlsx')
 
 for row in excel.table_Equipment.rows:
     print(f'{row.col_Instrument}: {row.col_Model}')
     print(f'  reference: {row.col_Model.reference}')
 
-excel.dump('zulu_excel_reader_test_dump.txt')
+excel.dump('pyspreadsheet_test.txt')
 ```
 
 ### Output

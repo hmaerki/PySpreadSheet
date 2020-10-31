@@ -6,6 +6,7 @@
 # Documentation of openpyxl:
 # https://bitbucket.org/openpyxl/openpyxl
 # https://openpyxl.readthedocs.io/en/stable/
+import datetime
 from pathlib import Path
 import openpyxl
 
@@ -17,13 +18,17 @@ COLUMN_NAME = 1 # Table name
 COLUMN_FIRST_CULUMN = 2
 
 class Cell:
-    def __init__(self, row, column, text):
+    def __init__(self, row, column, pyxl_cell):
         self._row = row
         self._column = column
-        self.text = text
+        self._pyxl_cell = pyxl_cell
 
     def __str__(self):
         return self.text
+
+    @property
+    def text(self):
+        return Cell.get_cell_value(self._pyxl_cell)
 
     @property
     def text_not_empty(self):
@@ -54,6 +59,16 @@ class Cell:
             valid_values = '|'.join([e.name for e in _enum])
             raise ValueError(f'"{t}" is not a valid {_enum.__name__}! Valid values are {valid_values}. See: {self.reference}')
 
+    def asdate(self, format='%Y-%m-%d'):
+        if self._pyxl_cell is None:
+            return ''
+        value = self._pyxl_cell.value
+        if value is None:
+            return ''
+        if not isinstance(value, datetime.datetime):
+            raise ValueError(f'"{self.text}" is not a datetime! See: {self.reference}')
+        return value.strftime(format=format)
+
     @property
     def coordinate(self):
         return self.get_coordinate(self._column._columnidx, self._row._rowidx)
@@ -72,12 +87,15 @@ class Cell:
         >>> Cell.get_coordinate(26, 2)
         'AA3'
         '''
-        s = ''
-        while columnidx >= 0:
-            c = columnidx % 26
-            s += chr(c + ord('A'))
-            columnidx -= 26
-        return s + str(rowidx+1)
+        if False:
+            s = ''
+            while columnidx >= 0:
+                c = columnidx % 26
+                s += chr(c + ord('A'))
+                columnidx -= 26
+            return s + str(rowidx+1)
+
+        return openpyxl.utils.get_column_letter(columnidx+1) + str(rowidx+1)
 
     @classmethod
     def get_cell(cls, pyxl_row, columnidx):
@@ -103,9 +121,8 @@ class Row:
 
         self._cells = []
         for column in table.columns:
-            cell = Cell.get_cell(pyxl_row, column._columnidx)
-            text = Cell.get_cell_value(cell)
-            self._cells.append(Cell(self, column, text))
+            pyxl_cell = Cell.get_cell(pyxl_row, column._columnidx)
+            self._cells.append(Cell(self, column, pyxl_cell))
 
         for cell in self._cells:
             setattr(self, f'{self.PREFIX}{cell._column.name}', cell)
