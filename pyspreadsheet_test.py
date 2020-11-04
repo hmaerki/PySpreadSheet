@@ -25,8 +25,9 @@ for row in equipment.rows:
 
 
 print('\nAccess using properties:')
-for row in excel.table_Equipment.rows:
-    print(f'  {row.col_Instrument}: {row.col_Model}')
+for row in excel.tables.Equipment.rows:
+    print(f'  Instrument: "{row.cols.Instrument}" Model: "{row.cols.Model}"')
+    print(f'    reference: {row.cols.Model.reference}')
 
 # Dump the whole file for source code revision control
 FILENAME_DUMP = 'pyspreadsheet_dump.txt'
@@ -39,13 +40,13 @@ def doctest_reference():
     >>> excel.reference
     'File "pyspreadsheet_test.xlsx"'
 
-    >>> excel.table_Equipment.reference
+    >>> excel.tables.Equipment.reference
     'Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"'
 
-    >>> excel.table_Equipment.rows[0].reference
+    >>> excel.tables.Equipment.rows[0].reference
     'Row 3 in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"'
 
-    >>> excel.table_Equipment.rows[0].col_ID.reference
+    >>> excel.tables.Equipment.rows[0].cols.ID.reference
     'Cell "C3" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"'
     '''
 
@@ -56,15 +57,10 @@ def doctest_excelreader():
        ...
     FileNotFoundError: [Errno 2] No such file or directory: 'invalid_filename.xlsx'
 
-    >>> excel.invalid
+    >>> excel.tables.Invalid
     Traceback (most recent call last):
        ...
-    AttributeError: "ExcelReader" object has no attribute "invalid"
-
-    >>> excel.table_Invalid
-    Traceback (most recent call last):
-       ...
-    AttributeError: No table "table_Invalid". Valid tables are "Equipment|Measurement|TableA|TableC". See: File "pyspreadsheet_test.xlsx"
+    KeyError: 'No table "Invalid". Valid tables are "Equipment|Measurement|TableA|TableC". See: File "pyspreadsheet_test.xlsx"'
 
     >>> excel['Invalid']
     Traceback (most recent call last):
@@ -74,27 +70,22 @@ def doctest_excelreader():
 
 def doctest_row():
     '''
-    >>> row = excel.table_Equipment.rows[0]
-
-    >>> row.invalid
-    Traceback (most recent call last):
-       ...
-    AttributeError: "Row" object has no attribute "invalid"
+    >>> row = excel.tables.Equipment.rows[0]
 
     >>> row['Invalid']
     Traceback (most recent call last):
        ...
     KeyError: 'No column "Invalid". Valid columns are ID|Instrument|Model|Serial. See: Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"'
 
-    >>> row.col_Invalid
+    >>> row.cols.Invalid
     Traceback (most recent call last):
        ...
-    AttributeError: No column "col_Invalid". Valid columns are ID|Instrument|Model|Serial. See: Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
+    KeyError: 'No column "Invalid". Valid columns are ID|Instrument|Model|Serial. See: Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"'
     '''
 
 def doctest_cell_int():
     '''
-    >>> cell_id = excel.table_Equipment.rows[0].col_ID
+    >>> cell_id = excel.tables.Equipment.rows[0].cols.ID
 
     >>> cell_id.reference
     'Cell "C3" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"'
@@ -108,7 +99,7 @@ def doctest_cell_int():
     >>> cell_id.astype(float)
     1.0
 
-    >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
+    >>> cell_voltmeter = excel.tables.Equipment.rows[0].cols.Instrument
     >>> cell_voltmeter.int
     Traceback (most recent call last):
        ...
@@ -117,7 +108,7 @@ def doctest_cell_int():
 
 def doctest_cell_enumaration():
     '''
-    >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
+    >>> cell_voltmeter = excel.tables.Equipment.rows[0].cols.Instrument
 
     >>> cell_voltmeter.text
     'Voltmeter'
@@ -125,7 +116,7 @@ def doctest_cell_enumaration():
     >>> cell_voltmeter.asenum(EquipmentType)
     <EquipmentType.Voltmeter: 1>
 
-    >>> cell_id = excel.table_Equipment.rows[0].col_ID
+    >>> cell_id = excel.tables.Equipment.rows[0].cols.ID
     >>> cell_id.asenum(EquipmentType)
     Traceback (most recent call last):
        ...
@@ -134,28 +125,28 @@ def doctest_cell_enumaration():
 
 def doctest_assert_not_empty():
     '''
-    >>> cell_empty = excel.table_Equipment.rows[0].col_Serial
+    >>> cell_empty = excel.tables.Equipment.rows[0].cols.Serial
 
     >>> cell_empty.text_not_empty
     Traceback (most recent call last):
        ...
     Exception: Cell must not be empty! Cell "F3" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
     
-    >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
+    >>> cell_voltmeter = excel.tables.Equipment.rows[0].cols.Instrument
     >>> cell_voltmeter.text_not_empty
     'Voltmeter'
     '''
 
 def doctest_date():
     '''
-    >>> cell_date = excel.table_Measurement.rows[0].col_Date
+    >>> cell_date = excel.tables.Measurement.rows[0].cols.Date
     >>> cell_date.text
     '2017-06-20 00:00:00'
     >>> cell_date.asdate()
     '2017-06-20'
     >>> cell_date.asdate(format='%A')
     'Tuesday'
-    >>> cell_voltmeter = excel.table_Equipment.rows[0].col_Instrument
+    >>> cell_voltmeter = excel.tables.Equipment.rows[0].cols.Instrument
     >>> cell_voltmeter.asdate()
     Traceback (most recent call last):
        ...

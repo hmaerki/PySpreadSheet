@@ -113,7 +113,6 @@ class Cell:
         return str(value)
 
 class Row:
-    PREFIX = 'col_'
 
     def __init__(self, table, pyxl_row, rowidx):
         self._table = table
@@ -124,8 +123,15 @@ class Row:
             pyxl_cell = Cell.get_cell(pyxl_row, column._columnidx)
             self._cells.append(Cell(self, column, pyxl_cell))
 
-        for cell in self._cells:
-            setattr(self, f'{self.PREFIX}{cell._column.name}', cell)
+    @property
+    def cols(self):
+        class Cols:
+            def __init__(self, row):
+                self.__row = row
+
+            def __getattr__(self, column_name):
+                return self.__row[column_name]
+        return Cols(self)
 
     @property
     def reference(self):
@@ -138,11 +144,6 @@ class Row:
             if cell._column == column:
                 return cell
         assert False, 'Programming error'
-
-    def __getattr__(self, column_name):
-        if column_name.startswith(self.PREFIX):
-            raise AttributeError(self._table._no_column(column_name))
-        raise AttributeError(f'"Row" object has no attribute "{column_name}"')
 
     def dump(self, file):
         columns = [str(self[c]) for c in self._table.column_names]
@@ -203,8 +204,6 @@ class Table:
             obj_row.dump(file=file)
 
 class ExcelReader:
-    PREFIX = 'table_'
-
     def __init__(self, str_filename_xlsx):
         self.__filename = str_filename_xlsx
         self.__dict_tables = {}
@@ -212,6 +211,16 @@ class ExcelReader:
         pyxl_workbook = openpyxl.load_workbook(filename=str_filename_xlsx, read_only=True, data_only=True)
         for pyxl_worksheet in pyxl_workbook.worksheets:
             self.__read_worksheet(pyxl_worksheet)
+
+    @property
+    def tables(self):
+        class Tables:
+            def __init__(self, excel):
+                self.__excel = excel
+
+            def __getattr__(self, table_name):
+                return self.__excel[table_name]
+        return Tables(self)
 
     def __read_worksheet(self, pyxl_worksheet):
         def get_value(pyxl_row, idx):
@@ -240,7 +249,6 @@ class ExcelReader:
                 assert table_name is not None
                 actual_table = Table(self, table_name, pyxl_worksheet.title, pyxl_row)
                 self.__dict_tables[table_name] = actual_table
-                setattr(self, f'{self.PREFIX}{table_name}', actual_table)
 
     @property
     def reference(self):
@@ -262,11 +270,6 @@ class ExcelReader:
             return self.__dict_tables[table_name]
         except KeyError as e:
             raise KeyError(self.__no_table(table_name)) from e
-
-    def __getattr__(self, table_name):
-        if table_name.startswith(self.PREFIX):
-            raise AttributeError(self.__no_table(table_name))
-        raise AttributeError(f'"ExcelReader" object has no attribute "{table_name}"')
 
     def dump(self, file):
         if isinstance(file, Path):

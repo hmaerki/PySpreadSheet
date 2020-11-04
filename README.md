@@ -14,9 +14,9 @@ This is a python implementation of a subset of https://github.com/hmaerki/ZuluSp
 ```python
 excel = ExcelReader('pyspreadsheet_test.xlsx')
 
-for row in excel.table_Equipment.rows:
-    print(f'{row.col_Instrument}: {row.col_Model}')
-    print(f'  reference: {row.col_Model.reference}')
+for row in excel.tables.Equipment.rows:
+    print(f'  Instrument: {row.cols.Instrument}, Model: {row.cols.Model}')
+    print(f'  reference: {row.cols.Model.reference}')
 
 excel.dump('pyspreadsheet_test.txt')
 ```
@@ -24,11 +24,11 @@ excel.dump('pyspreadsheet_test.txt')
 ### Output
 
 ```text
-Voltmeter: Keysight 34460A
+Instrument: Voltmeter, Model: Keysight 34460A
   reference: Cell "E3" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
-Multimeter: Fluke 787
+Instrument: Multimeter, Model: Fluke 787
   reference: Cell "E4" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
-Voltmeter: KEYSIGHT U1231A
+Instrument: Voltmeter, Model: KEYSIGHT U1231A
   reference: Cell "E5" in Table "Equipment" in Worksheet "Inventory" in File "pyspreadsheet_test.xlsx"
 ```
 
