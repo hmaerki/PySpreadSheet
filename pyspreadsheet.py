@@ -59,7 +59,7 @@ class Cell:
             valid_values = '|'.join([e.name for e in _enum])
             raise ValueError(f'"{t}" is not a valid {_enum.__name__}! Valid values are {valid_values}. See: {self.reference}')
 
-    def asdate(self, format='%Y-%m-%d'):
+    def asdate(self, format='%Y-%m-%d'):  # pylint: disable=redefined-builtin
         if self._pyxl_cell is None:
             return ''
         value = self._pyxl_cell.value
@@ -71,11 +71,11 @@ class Cell:
 
     @property
     def coordinate(self):
-        return self.get_coordinate(self._column._columnidx, self._row._rowidx)
+        return self.get_coordinate(self._column._columnidx, self._row._rowidx)  # pylint: disable=protected-access
 
     @property
     def reference(self):
-        return f'Cell "{self.coordinate}" in {self._row._table.reference}'
+        return f'Cell "{self.coordinate}" in {self._row._table.reference}'  # pylint: disable=protected-access
 
     @classmethod
     def get_coordinate(cls, columnidx, rowidx):
@@ -87,7 +87,7 @@ class Cell:
         >>> Cell.get_coordinate(26, 2)
         'AA3'
         '''
-        if False:
+        if False:  # pylint: disable=using-constant-test
             s = ''
             while columnidx >= 0:
                 c = columnidx % 26
@@ -125,7 +125,7 @@ class Row:
 
     @property
     def cols(self):
-        class Cols:
+        class Cols:  # pylint: disable=too-few-public-methods
             def __init__(self, row):
                 self.__row = row
 
@@ -143,13 +143,14 @@ class Row:
         for cell in self._cells:
             if cell._column == column:
                 return cell
-        assert False, 'Programming error'
+        raise NotImplementedError('Programming error')
+
 
     def dump(self, file):
         columns = [str(self[c]) for c in self._table.column_names]
         print(f'  {"|".join(columns)}', file=file)
 
-class Column:
+class Column:  # pylint: disable=too-few-public-methods
     def __init__(self, columnidx, name):
         self._columnidx = columnidx
         self.name = name
@@ -214,7 +215,7 @@ class ExcelReader:
 
     @property
     def tables(self):
-        class Tables:
+        class Tables:  # pylint: disable=too-few-public-methods
             def __init__(self, excel):
                 self.__excel = excel
 
