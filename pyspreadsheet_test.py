@@ -5,7 +5,7 @@ Below are doctests. It is worth to study them as they show benefits of this libr
 '''
 
 from pathlib import Path
-from pyspreadsheet import ExcelReader
+from pyspreadsheet import ExcelReader, main
 
 # Read a excel sheet
 DIRECTORY_OF_THIS_FILE = Path(__file__).parent
@@ -32,8 +32,7 @@ for row in excel.tables.Equipment.rows:
 # Dump the whole file for source code revision control
 FILENAME_DUMP = 'pyspreadsheet_dump.txt'
 print(f'\nWrite: {FILENAME_DUMP}')
-with (DIRECTORY_OF_THIS_FILE / FILENAME_DUMP).open('w') as f:
-    excel.dump(f)
+excel.dump(DIRECTORY_OF_THIS_FILE / FILENAME_DUMP)
 
 def doctest_reference():
     '''
@@ -154,5 +153,6 @@ def doctest_date():
     '''
 
 if __name__ == '__main__':
+    main()
     import doctest
     doctest.testmod()
